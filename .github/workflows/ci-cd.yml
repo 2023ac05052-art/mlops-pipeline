@@ -26,7 +26,7 @@ jobs:
         echo "Current user: $(whoami)"
         echo "Docker version: $(docker --version)"
         echo "Docker info: $(docker info)"
-        
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -86,53 +86,24 @@ jobs:
 
     - name: Log in to Docker Hub
       run: |
-        echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
     - name: Build Docker image
       run: |
-        sudo docker build -t mlops_80_model_img .
+        docker build -t mlops_80_model_img .
 
     - name: Push Docker image to Docker Hub
       run: |
-        sudo docker tag mlops_80_model_img ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
-        sudo docker push ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
+        docker tag mlops_80_model_img ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
 
     - name: Stop and Remove Existing Container
       run: |
-        if [ "$(sudo docker ps -q -f name=mlops_80_model_app)" ]; then
-          sudo docker stop mlops_80_model_app
-          sudo docker rm mlops_80_model_app
+        if [ "$(docker ps -q -f name=mlops_80_model_app)" ]; then
+          docker stop mlops_80_model_app
+          docker rm mlops_80_model_app
         fi
 
     - name: Deploy Docker container
       run: |
-        sudo docker run -d -p 5000:5000 --name mlops_80_model_app ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
-  
-  deploy_to_azure:
-    runs-on: self-hosted
-    needs: build_and_deploy
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Log in to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        # auth-type: SERVICE_PRINCIPAL
-        # subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        # enable-AzPSSession: true
-    - name: Build Docker image
-      run: |
-        sudo docker build -t mlops_80_model_img .
-
-    - name: Build and Push Docker image to ACR
-      run: |
-        az acr login --name ${{ secrets.ACR_NAME }}
-        docker tag mlops_80_model_img ${{ secrets.ACR_NAME }}.azurecr.io/mlops_80_model_img:latest
-        docker push ${{ secrets.ACR_NAME }}.azurecr.io/mlops_80_model_img:latest
-
-    - name: Deploy to Azure App Service
-      run: |
-        az webapp config container set --name ${{ secrets.WEB_APP_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --docker-custom-image-name ${{ secrets.ACR_NAME }}.azurecr.io/mlops_80_model_img:latest --docker-registry-server-url https://${{ secrets.ACR_NAME }}.azurecr.io
+        docker run -d -p 5000:5000 --name mlops_80_model_app ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest

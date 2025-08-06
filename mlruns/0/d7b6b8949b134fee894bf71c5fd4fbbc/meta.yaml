@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/patibp2/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/0/d7b6b8949b134fee894bf71c5fd4fbbc/artifacts
+end_time: 1737716724992
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: d7b6b8949b134fee894bf71c5fd4fbbc
+run_name: bright-bat-245
+run_uuid: d7b6b8949b134fee894bf71c5fd4fbbc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737716721447
+status: 3
+tags: []
+user_id: patibp2

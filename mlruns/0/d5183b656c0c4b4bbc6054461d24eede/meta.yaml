@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/patibp2/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/0/d5183b656c0c4b4bbc6054461d24eede/artifacts
+end_time: 1737716326071
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: d5183b656c0c4b4bbc6054461d24eede
+run_name: placid-yak-723
+run_uuid: d5183b656c0c4b4bbc6054461d24eede
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737716322514
+status: 3
+tags: []
+user_id: patibp2

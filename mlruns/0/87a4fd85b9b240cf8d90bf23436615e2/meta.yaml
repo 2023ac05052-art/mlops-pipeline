@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/patibp2/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/0/87a4fd85b9b240cf8d90bf23436615e2/artifacts
+end_time: 1737716322501
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 87a4fd85b9b240cf8d90bf23436615e2
+run_name: fortunate-vole-490
+run_uuid: 87a4fd85b9b240cf8d90bf23436615e2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737716319013
+status: 3
+tags: []
+user_id: patibp2

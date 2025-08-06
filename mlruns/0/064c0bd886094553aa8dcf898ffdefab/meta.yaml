@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/patibp2/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/0/064c0bd886094553aa8dcf898ffdefab/artifacts
+end_time: 1737716566759
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 064c0bd886094553aa8dcf898ffdefab
+run_name: industrious-hen-447
+run_uuid: 064c0bd886094553aa8dcf898ffdefab
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737716562591
+status: 3
+tags: []
+user_id: patibp2

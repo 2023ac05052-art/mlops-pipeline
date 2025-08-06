@@ -1,0 +1,15 @@
+artifact_uri: file:C:/Users/patibp2/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/819372554692435018/f7f7b65fc3fb48ee80ea668817821e96/artifacts
+end_time: 1737717151761
+entry_point_name: ''
+experiment_id: '819372554692435018'
+lifecycle_stage: active
+run_id: f7f7b65fc3fb48ee80ea668817821e96
+run_name: treasured-lamb-238
+run_uuid: f7f7b65fc3fb48ee80ea668817821e96
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737717148219
+status: 3
+tags: []
+user_id: patibp2

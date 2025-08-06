@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/patibp2/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/0/c0e1ee97bab5462cafafd7d662083507/artifacts
+end_time: 1737716319002
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: c0e1ee97bab5462cafafd7d662083507
+run_name: smiling-sponge-624
+run_uuid: c0e1ee97bab5462cafafd7d662083507
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737716314680
+status: 3
+tags: []
+user_id: patibp2

@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/patibp2/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/0/5f0ee90119d641e7a3074a6d60a01abe/artifacts
+end_time: 1737716721437
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 5f0ee90119d641e7a3074a6d60a01abe
+run_name: valuable-stork-379
+run_uuid: 5f0ee90119d641e7a3074a6d60a01abe
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737716717017
+status: 3
+tags: []
+user_id: patibp2

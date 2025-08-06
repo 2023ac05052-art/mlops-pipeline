@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/patibp2/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/0/c266b45d960b422d9d98b26d17fc6e24/artifacts
+end_time: 1737716573770
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: c266b45d960b422d9d98b26d17fc6e24
+run_name: nosy-croc-550
+run_uuid: c266b45d960b422d9d98b26d17fc6e24
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737716570222
+status: 3
+tags: []
+user_id: patibp2

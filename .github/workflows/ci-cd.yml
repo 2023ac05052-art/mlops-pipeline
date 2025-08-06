@@ -19,8 +19,14 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Show working directory
-      run: echo "GitHub workspace: ${{ github.workspace }}"; pwd; ls -la
-
+      run: |
+        echo "GitHub workspace: $GITHUB_WORKSPACE"
+        pwd
+        ls -la
+        echo "Current user: $(whoami)"
+        echo "Docker version: $(docker --version)"
+        echo "Docker info: $(docker info)"
+        
     - name: Set up Python
       uses: actions/setup-python@v2
       with:

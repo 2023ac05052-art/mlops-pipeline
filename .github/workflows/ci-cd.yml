@@ -17,6 +17,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      
+    - name: Show working directory
+      run: echo "GitHub workspace: ${{ github.workspace }}"; pwd; ls -la
 
     - name: Set up Python
       uses: actions/setup-python@v2

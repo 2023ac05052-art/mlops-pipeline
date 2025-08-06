@@ -12,7 +12,7 @@ on:
 
 jobs:
   lint:
-    runs-on: mlops-self-hosted
+    runs-on: self-hosted
 
     steps:
     - name: Checkout code
@@ -40,7 +40,7 @@ jobs:
         fi
 
   test:
-    runs-on: mlops-self-hosted
+    runs-on: self-hosted
     needs: lint
 
     steps:
@@ -64,7 +64,7 @@ jobs:
         python train_model.py
 
   build_and_deploy:
-    runs-on: mlops-self-hosted
+    runs-on: self-hosted
     needs: test
 
     steps:
@@ -100,7 +100,7 @@ jobs:
         sudo docker run -d -p 5000:5000 --name mlops_80_model_app ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
   
   deploy_to_azure:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build_and_deploy
 
     steps:

@@ -47,3 +47,27 @@ jobs:
         else
             echo "Linting passed with $error_count errors."
         fi
+
+  test:
+    runs-on: self-hosted
+    needs: lint
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas scikit-learn joblib mlflow dvc
+
+    - name: Prepare data and train model
+      run: |
+        # dvc pull --force
+        python prepare_data.py
+        python train_model.py

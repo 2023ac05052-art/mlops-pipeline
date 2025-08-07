@@ -1,4 +1,4 @@
-artifact_uri: file:C:/Users/patibp2/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/819372554692435018/eff39603aac3425eaa1e764b6c09d09e/artifacts
+artifact_uri: file:C:/Users/sunil/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/819372554692435018/eff39603aac3425eaa1e764b6c09d09e/artifacts
 end_time: 1737727178799
 entry_point_name: ''
 experiment_id: '819372554692435018'
@@ -12,4 +12,4 @@ source_version: ''
 start_time: 1737727164089
 status: 3
 tags: []
-user_id: patibp2
+user_id: sunil

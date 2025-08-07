@@ -41,7 +41,7 @@ def validate_data(df: pd.DataFrame):
 if __name__ == "__main__":
     # Load your data from the CSV file
     try:
-        # Assuming your data file is named 'your_data.csv'
+
         df = pd.read_csv('data/breast_cancer.csv')
 
         # Run the validation
@@ -59,7 +59,7 @@ if __name__ == "__main__":
             exit(0)
             
     except FileNotFoundError:
-        print("Error: 'your_data.csv' not found. Please ensure the file exists.")
+        print("Error: 'csv' not found. Please ensure the file exists.")
         exit(1)
     except Exception as e:
         print(f"An unexpected error occurred: {e}")

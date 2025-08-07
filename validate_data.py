@@ -1,11 +1,14 @@
 # validate_data.py
-
 import pandas as pd
-from pydantic import BaseModel, ValidationError, Field
+from pydantic import BaseModel, ValidationError, Field, TypeAdapter
 from typing import List
 
-
+# Define the expected data schema using Pydantic.
+# The fields must match the column headers in your CSV file exactly.
+# This schema now uses aliases that correspond to the abbreviated
+# column names in the provided CSV file.
 class DataSchema(BaseModel):
+    # Use Field(..., alias="column name") for columns with spaces.
     mean_radius: float = Field(..., alias="mean radius")
     mean_texture: float = Field(..., alias="mean textu")
     mean_perimeter: float = Field(..., alias="mean peri")
@@ -38,41 +41,45 @@ class DataSchema(BaseModel):
     worst_fractal_dimension: float = Field(..., alias="worst fract dim")
     target: int
 
+# Use TypeAdapter to validate the entire list of records at once.
+list_adapter = TypeAdapter(List[DataSchema])
 
 def validate_data(df: pd.DataFrame):
     """
-    Validates a pandas DataFrame against the Pydantic DataSchema.
-
+    Validates a pandas DataFrame against the Pydantic DataSchema
+    using a TypeAdapter for efficiency.
+    
     Args:
         df: The DataFrame to validate.
-
+        
     Returns:
-        A list of validation errors if any, otherwise None.
+        A list of validation errors if any, otherwise an empty list.
     """
-    errors = []
-    for index, row in df.iterrows():
-        try:
-            DataSchema(**row.to_dict())
-        except ValidationError as e:
-            errors.append({"row_index": index, "errors": e.errors()})
-    return errors
-
+    try:
+        # Convert the DataFrame to a list of dictionaries for validation.
+        list_adapter.validate_python(df.to_dict(orient='records'))
+        return []
+    except ValidationError as e:
+        # Pydantic will return all errors in a single ValidationError object.
+        return e.errors()
 
 if __name__ == "__main__":
     try:
+        # Load your data from the CSV file.
         df = pd.read_csv("data/breast_cancer.csv")
         validation_errors = validate_data(df)
 
         if validation_errors:
             print("Data validation failed with the following errors:")
             for error in validation_errors:
-                print(f"Row {error['row_index']}: {error['errors']}")
+                print(f"Error: {error}")
             exit(1)
         else:
             print("Data validation successful!")
             exit(0)
     except FileNotFoundError:
-        print("Error: 'csv' not found. Please ensure the file exists.")
+        print("Error: 'data/breast_cancer.csv' not found. "
+              "Please ensure the file exists.")
         exit(1)
     except Exception as e:
         print(f"An unexpected error occurred: {e}")

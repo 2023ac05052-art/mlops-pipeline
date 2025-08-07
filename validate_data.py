@@ -1,28 +1,66 @@
 # validate_data.py
-from pydantic import BaseModel, ValidationError
 import pandas as pd
+from pydantic import BaseModel, ValidationError, Field
+from typing import List
 
+# Define the expected data schema using Pydantic.
+# The fields must match the column headers in your CSV file exactly.
+# Based on your error message, I've included an example schema
+# with column names like 'mean radius'.
 class DataSchema(BaseModel):
-    # Define your expected data schema here
-    # Example fields:
-    feature1: float
-    feature2: float
-    label: int
+    # Example fields based on the error message's input_value.
+    # You will need to adjust these to match all of your data's columns.
+    mean_radius: float = Field(..., alias="mean radius")
+    # Add other fields here as needed
+    # mean_texture: float = Field(..., alias="mean texture")
+    # etc...
+    target: int
 
-# Load your data
-try:
-    df = pd.read_csv('data/breast_cancer.csv')
-
-    # Iterate through DataFrame rows and validate against the schema
-    for _, row in df.iterrows():
-        DataSchema(**row.to_dict())
+# A function to perform the validation on a Pandas DataFrame
+def validate_data(df: pd.DataFrame):
+    """
+    Validates a pandas DataFrame against the Pydantic DataSchema.
     
-    print("Data validation successful!")
-except ValidationError as e:
-    print("Data validation failed:")
-    print(e)
-    # You would want to exit with an error code to fail the CI/CD job
-    exit(1)
-except Exception as e:
-    print(f"An error occurred: {e}")
-    exit(1)
+    Args:
+        df: The DataFrame to validate.
+        
+    Returns:
+        A list of validation errors if any, otherwise None.
+    """
+    errors = []
+    for index, row in df.iterrows():
+        try:
+            # Use **row.to_dict() to unpack the row's values into the model constructor.
+            # Pydantic will handle the validation.
+            DataSchema(**row.to_dict())
+        except ValidationError as e:
+            # If validation fails, store the error with the row index for better debugging.
+            errors.append({"row_index": index, "errors": e.errors()})
+    return errors
+
+if __name__ == "__main__":
+    # Load your data from the CSV file
+    try:
+        # Assuming your data file is named 'your_data.csv'
+        df = pd.read_csv('data/breast_cancer.csv')
+
+        # Run the validation
+        validation_errors = validate_data(df)
+        
+        if validation_errors:
+            print("Data validation failed with the following errors:")
+            for error in validation_errors:
+                print(f"Row {error['row_index']}: {error['errors']}")
+            # Exit with a non-zero status code to fail the GitHub Actions job
+            exit(1)
+        else:
+            print("Data validation successful!")
+            # Exit with a zero status code for a successful job
+            exit(0)
+            
+    except FileNotFoundError:
+        print("Error: 'your_data.csv' not found. Please ensure the file exists.")
+        exit(1)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        exit(1)

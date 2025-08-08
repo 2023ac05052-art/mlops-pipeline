@@ -51,6 +51,7 @@ jobs:
   validate_data:
     runs-on: self-hosted
     needs: lint
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -70,15 +71,14 @@ jobs:
           python validate_data.py
           
       - name: Push metrics to Prometheus Pushgateway
-  run: |
-    echo "Pushing data validation metrics to Prometheus"
-    curl -X POST -H "Content-Type: text/plain" --data-binary @- http://10.243.245.246:9091/metrics/job/ci-cd-validation <<EOF
-    # HELP validation_successes_total Total number of successful validations.
-    # TYPE validation_successes_total counter
-    validation_successes_total 1
-    EOF
+        run: |
+          echo "Pushing data validation metrics to Prometheus"
+          curl -X POST -H "Content-Type: text/plain" --data-binary @- http://10.243.245.246:9091/metrics/job/ci-cd-validation <<EOF
+          # HELP validation_successes_total Total number of successful validations.
+          # TYPE validation_successes_total counter
+          validation_successes_total 1
+          EOF
 
-          
   test:
     runs-on: self-hosted
     needs: validate_data

@@ -69,15 +69,15 @@ jobs:
         run: |
           python validate_data.py
           
-      - name: Push metrics to Prometheus
-        run: |
-          # This step pushes data validation metrics to a Prometheus Pushgateway.
-          # You would need to have Pushgateway running and configured.
-          # Here's an example of how you might use curl to push metrics.
-          echo "Pushing data validation metrics to Prometheus"
-          # curl -X POST -H "Content-Type: text/plain" --data-binary '# HELP validation_successes_total Total number of successful validations.
-          # # TYPE validation_successes_total counter
-          # validation_successes_total 1' http://your-prometheus-pushgateway:9091/metrics/job/ci-cd-validation
+      - name: Push metrics to Prometheus Pushgateway
+  run: |
+    echo "Pushing data validation metrics to Prometheus"
+    curl -X POST -H "Content-Type: text/plain" --data-binary @- http://10.243.245.246:9091/metrics/job/ci-cd-validation <<EOF
+    # HELP validation_successes_total Total number of successful validations.
+    # TYPE validation_successes_total counter
+    validation_successes_total 1
+    EOF
+
           
   test:
     runs-on: self-hosted

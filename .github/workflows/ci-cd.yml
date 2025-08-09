@@ -64,21 +64,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           # We need to install dvc here to pull the data
-          pip install pandas pydantic dvc s3fs
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: 'us-east-1' # Replace with your S3 bucket region
+          pip install pandas pydantic dvc
 
       - name: Configure DVC remote
         run: |
-          # This step is crucial for DVC to know where to pull from.
-          # We'll use your configured remote here.
-          dvc remote add -d myremote s3://my-dvc-bucket/dvc-storage
+          # This step configures a local directory on the runner as the DVC remote.
+          # This works for a self-hosted runner but is not recommended for production.
+          dvc remote add -d myremote /home/vsdevops/actions-runner/_work/dvc-cache
 
+      - name: Push data with DVC
+        run: |
+          # The initial push of the data to the local DVC cache.
+          dvc push
+          
       - name: Pull data with DVC
         run: |
           # This step pulls the data file from the DVC remote cache

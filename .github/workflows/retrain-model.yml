@@ -31,7 +31,7 @@ jobs:
           # Pull the latest version of the DVC files from the remote repository
           git pull origin main
           # Pull any new data from the DVC remote storage
-          dvc pull --force
+          dvc pull data/breast_cancer.csv.dvc --force
           # Run the DVC pipeline to prepare data and train the model.
           # This command will execute the steps defined in your dvc.yaml file.
           dvc repro

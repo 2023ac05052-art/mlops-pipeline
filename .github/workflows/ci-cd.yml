@@ -60,11 +60,24 @@ jobs:
         with:
           python-version: '3.8'
           
-      - name: Install dependencies and Pydantic
+      - name: Install dependencies and DVC
         run: |
           python -m pip install --upgrade pip
           # We need to install dvc here to pull the data
-          pip install pandas pydantic dvc
+          pip install pandas pydantic dvc s3fs
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'us-east-1' # Replace with your S3 bucket region
+
+      - name: Configure DVC remote
+        run: |
+          # This step is crucial for DVC to know where to pull from.
+          # We'll use your configured remote here.
+          dvc remote add -d myremote s3://my-dvc-bucket/dvc-storage
 
       - name: Pull data with DVC
         run: |

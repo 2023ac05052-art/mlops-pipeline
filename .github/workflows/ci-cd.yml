@@ -15,42 +15,43 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
       
-    - name: Show working directory
-      run: |
-        echo "GitHub workspace: $GITHUB_WORKSPACE"
-        pwd
-        ls -la
-        echo "Current user: $(whoami)"
-        echo "Docker version: $(docker --version)"
-        echo "Docker info: $(docker info)"
+      - name: Show working directory
+        run: |
+          echo "GitHub workspace: $GITHUB_WORKSPACE"
+          pwd
+          ls -la
+          echo "Current user: $(whoami)"
+          echo "Docker version: $(docker --version)"
+          echo "Docker info: $(docker info)"
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
 
-    - name: Lint code
-      run: |
-        flake8 . --exit-zero --statistics > flake8_stats.txt
-        error_count=$(grep -oP '^\d+' flake8_stats.txt | awk '{s+=$1} END {print s}')
-        if [ "$error_count" -ge 10 ]; then
-            echo "Linting failed with $error_count errors."
-            exit 1
-        else
-            echo "Linting passed with $error_count errors."
-        fi
+      - name: Lint code
+        run: |
+          flake8 . --exit-zero --statistics > flake8_stats.txt
+          error_count=$(grep -oP '^\d+' flake8_stats.txt | awk '{s+=$1} END {print s}')
+          if [ "$error_count" -ge 10 ]; then
+              echo "Linting failed with $error_count errors."
+              exit 1
+          else
+              echo "Linting passed with $error_count errors."
+          fi
 
   validate_data:
     runs-on: self-hosted
     needs: lint
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -60,29 +61,11 @@ jobs:
         with:
           python-version: '3.8'
           
-      - name: Install dependencies and DVC
+      - name: Install dependencies and Pydantic
         run: |
           python -m pip install --upgrade pip
-          # We need to install dvc here to pull the data
-          pip install pandas pydantic dvc
+          pip install pandas pydantic
 
-      - name: Configure DVC remote
-        run: |
-          # This step configures a local directory on the runner as the DVC remote.
-          # This works for a self-hosted runner but is not recommended for production.
-          # The --force flag is added to overwrite the remote configuration if it already exists.
-          dvc remote add -d myremote /home/vsdevops/actions-runner/_work/dvc-cache --force
-
-      - name: Push data with DVC
-        run: |
-          # The initial push of the data to the local DVC cache.
-          dvc push
-          
-      - name: Pull data with DVC
-        run: |
-          # This step pulls the data file from the DVC remote cache
-          dvc pull --force
-          
       - name: Validate input data with Pydantic
         run: |
           python validate_data.py
@@ -95,7 +78,7 @@ jobs:
           # TYPE validation_successes_total counter
           validation_successes_total 1
           EOF
-          
+
   test:
     runs-on: self-hosted
     needs: validate_data
@@ -116,8 +99,7 @@ jobs:
 
       - name: Prepare data and train model
         run: |
-          # The dvc pull is now done in the validate_data job,
-          # so we don't need it here unless other data is needed.
+          # dvc pull --force
           python prepare_data.py
           python train_model.py
         
@@ -126,33 +108,33 @@ jobs:
     needs: test
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Print current user
-      run: |
-        whoami
+      - name: Print current user
+        run: |
+          whoami
 
-    - name: Log in to Docker Hub
-      run: |
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Log in to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    - name: Build Docker image
-      run: |
-        docker build -t mlops_80_model_img .
+      - name: Build Docker image
+        run: |
+          docker build -t mlops_80_model_img .
 
-    - name: Push Docker image to Docker Hub
-      run: |
-        docker tag mlops_80_model_img ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker tag mlops_80_model_img ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
 
-    - name: Stop and Remove Existing Container
-      run: |
-        if [ "$(docker ps -q -f name=mlops_80_model_app)" ]; then
-          docker stop mlops_80_model_app
-          docker rm mlops_80_model_app
-        fi
+      - name: Stop and Remove Existing Container
+        run: |
+          if [ "$(docker ps -q -f name=mlops_80_model_app)" ]; then
+            docker stop mlops_80_model_app
+            docker rm mlops_80_model_app
+          fi
 
-    - name: Deploy Docker container
-      run: |
-        docker run -d -p 5000:5000 --name mlops_80_model_app ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest
+      - name: Deploy Docker container
+        run: |
+          docker run -d -p 5000:5000 --name mlops_80_model_app ${{ secrets.DOCKER_USERNAME }}/mlops_80_model_img:latest

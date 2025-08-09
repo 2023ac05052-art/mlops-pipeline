@@ -1,5 +1,5 @@
 artifact_uri: file:C:/Users/sunil/Documents/M.Tech/MLOps/Final/mlops_80/mlruns/819372554692435018/1a8633e9fb5d460eb1293e9e9f1b5928/artifacts
-end_time: 1737717155429
+end_time: 1754652383000
 entry_point_name: ''
 experiment_id: '819372554692435018'
 lifecycle_stage: active
@@ -9,7 +9,7 @@ run_uuid: 1a8633e9fb5d460eb1293e9e9f1b5928
 source_name: ''
 source_type: 4
 source_version: ''
-start_time: 1750674564000
+start_time: 1754652143000
 status: 3
 tags: []
 user_id: sunil

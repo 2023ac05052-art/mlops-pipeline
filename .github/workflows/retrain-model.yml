@@ -1,0 +1,48 @@
+name: Retrain Model on New Data
+
+# Specifies the events that trigger the workflow
+# This can be triggered manually from the GitHub Actions UI.
+on:
+  workflow_dispatch:
+  # Or a scheduled trigger
+  schedule:
+    - cron: '*/10 * * * *'
+
+jobs:
+  retrain:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas scikit-learn joblib mlflow dvc
+
+      - name: Retrain and version model with DVC
+        run: |
+          # Pull the latest version of the DVC files from the remote repository
+          git pull origin main
+          # Pull any new data from the DVC remote storage
+          dvc pull --force
+          # Run the DVC pipeline to prepare data and train the model.
+          # This command will execute the steps defined in your dvc.yaml file.
+          dvc repro
+          # Add the newly trained model to DVC for versioning
+          dvc add model.pkl
+          # Push the new model to the DVC remote storage
+          dvc push
+          # Commit the updated DVC metadata file to Git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add model.pkl.dvc
+          git commit -m "Retrained model with new data"
+          # Push the changes to the Git repository
+          git push

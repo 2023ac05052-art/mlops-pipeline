@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   # Or a scheduled trigger
   schedule:
-    - cron: '*/3 * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   retrain:

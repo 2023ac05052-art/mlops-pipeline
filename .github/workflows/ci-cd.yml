@@ -70,7 +70,8 @@ jobs:
         run: |
           # This step configures a local directory on the runner as the DVC remote.
           # This works for a self-hosted runner but is not recommended for production.
-          dvc remote add -d myremote /home/vsdevops/actions-runner/_work/dvc-cache
+          # The --force flag is added to overwrite the remote configuration if it already exists.
+          dvc remote add -d myremote /home/vsdevops/actions-runner/_work/dvc-cache --force
 
       - name: Push data with DVC
         run: |

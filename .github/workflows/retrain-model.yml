@@ -35,8 +35,6 @@ jobs:
           # Run the DVC pipeline to prepare data and train the model.
           # This command will execute the steps defined in your dvc.yaml file.
           dvc repro
-          # Push the new data to the DVC remote storage
-          dvc push data/breast_cancer.csv.dvc
           # Add the newly trained model to DVC for versioning
           dvc add model.pkl
           # Push the new model to the DVC remote storage
